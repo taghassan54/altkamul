@@ -47,7 +47,7 @@ class _QuestionPageState extends State<QuestionPage>
         /* app Bar + load Next Loading */
         title: Column(
           children: [
-            const Text("All Questions"),
+             Text("All Questions - page : $pageSize"),
             if (loadNextLoading)
               const Text(
                 "load Next Loading ...",
@@ -66,6 +66,7 @@ class _QuestionPageState extends State<QuestionPage>
                 setState(() {
                   loadNextLoading = false;
                   _items!.addAll(state.questions.items!);
+                  
                 });
               }
             },

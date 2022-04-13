@@ -1,4 +1,5 @@
 
+import 'package:altkamul/app/questions/data/models/AnswersModel.dart';
 import 'package:altkamul/app/questions/data/models/QuestionsModel.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -55,6 +56,8 @@ class UserSession {
 
     return QuestionsModel.fromJson(questions);
   }
+
+  void saveQuestionAnswers(AnswersModel answersModel) {}
 
 
 }
