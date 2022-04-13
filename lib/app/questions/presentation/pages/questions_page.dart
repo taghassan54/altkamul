@@ -3,6 +3,7 @@ import 'package:altkamul/app/questions/presentation/blocs/bloc.dart';
 import 'package:altkamul/app/questions/presentation/pages/single_question_page.dart';
 import 'package:altkamul/app/questions/presentation/widgets/question_card.dart';
 import 'package:altkamul/config/dependencies_provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -21,17 +22,24 @@ class _QuestionPageState extends State<QuestionPage>
   var loadNextLoading = false;
   int pageSize = 1;
   final List<Items>? _items = [];
-
+  var connectivityResult;
   @override
   void initState() {
     _questionBloc = QuestionBloc(DependenciesProvider.provide());
     _questionNextBloc = QuestionBloc(DependenciesProvider.provide());
     _questionBloc.add(GetAllQuestions(pageSize: pageSize));
-
+    check();
     _scrollController = ScrollController(keepScrollOffset: true);
     watchChange();
     super.initState();
   }
+
+  check()async{
+    var result = await (Connectivity().checkConnectivity());
+     setState(() {
+       connectivityResult=result;
+     });
+}
 
   @override
   void dispose() {
@@ -44,10 +52,11 @@ class _QuestionPageState extends State<QuestionPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: connectivityResult == ConnectivityResult.none?Colors.red:Colors.blueAccent,
         /* app Bar + load Next Loading */
         title: Column(
           children: [
-             Text("All Questions - page : $pageSize"),
+             Text("All Questions - page : $pageSize ${connectivityResult == ConnectivityResult.none?'offline':'online'}"),
             if (loadNextLoading)
               const Text(
                 "load Next Loading ...",
