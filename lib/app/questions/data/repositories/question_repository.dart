@@ -31,11 +31,16 @@ class QuestionRepository {
 
   geQuestionAnswers({int? questionId}) async {
 
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return _session.getQuestionsAnswers(questionId);
+    }
+
     try {
       var response = await _client.get(
           'questions/$questionId/answers?order=desc&sort=activity&site=stackoverflow');
-
-      _session.saveQuestions(QuestionsModel.fromJson(response.data));
+      _session.saveQuestionAnswers(AnswersModel.fromJson(response.data),questionId);
       return AnswersModel.fromJson(response.data);
     } catch (ex) {
       rethrow;

@@ -52,12 +52,28 @@ class UserSession {
   }
 
   Object? getQuestions() {
-   var questions=  box.read('questions')??[];
+   var questions=  box.read('questions');
+
+   if(questions==null) {
+     return QuestionsModel(items: [],hasMore: false,quotaMax: 10000,quotaRemaining: 10000);
+   }
 
     return QuestionsModel.fromJson(questions);
   }
 
-  void saveQuestionAnswers(AnswersModel answersModel) {}
+  void saveQuestionAnswers(AnswersModel answersModel,int? questionId) {
+    box.write(questionId.toString(), answersModel);
+  }
+
+  getQuestionsAnswers(int? questionId) {
+    var answers=  box.read(questionId.toString());
+
+    if(answers==null) {
+      return AnswersModel(items: [],hasMore: false,quotaMax: 10000,quotaRemaining: 10000);
+    }
+
+    return AnswersModel.fromJson(answers);
+  }
 
 
 }
